@@ -1,4 +1,7 @@
-﻿namespace UberFrba
+﻿using System.Configuration;
+using System.Data.SqlClient;
+
+namespace UberFrba
 {
     partial class Form1
     {
@@ -30,7 +33,22 @@
         {
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Text = "Form1";
+
+            var connectionString = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
+
+            string text = string.Empty;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                var query = "SELECT TOP 1 Usuario_Username FROM Usuario";
+                SqlCommand command = new SqlCommand(query, connection);
+                var result = command.ExecuteScalar();
+                text = result.ToString();
+            }
+
+            //this.Text = "UberFRBA";
+            this.Text = text;
         }
 
         #endregion
